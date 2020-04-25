@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<?r response.do_not_cache! ?>
+		
+		<?r if title = self[:title] ?>
+			<title>Editing #{title.gsub(/<.*?>/, "")}</title>
+		<?r else ?>
+			<title>Utopia</title>
+		<?r end ?>
+		
+		<link rel="icon" type="image/png" href="/_static/icon.png" />
+		<link rel="stylesheet" href="/_static/site.css" type="text/css" media="screen" />
+		
+		<script src="/_components/jquery/jquery.min.js"></script>
+	</head>
+
+	<body class="editor">
+		<utopia:content/>
+	</body>
+</html>

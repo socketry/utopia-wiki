@@ -1,0 +1,10 @@
+<content:editor>
+	<form action="#" method="post">
+		<div class="header">
+			<div>Editing #{attributes[:title].inspect}</div>
+			<input type="submit" />
+		</div>
+		
+		<textarea name="content">#{self[:content]}</textarea>
+	</form>
+</content:editor>

@@ -28,7 +28,7 @@ require 'utopia/gallery'
 
 module Utopia
 	module Wiki
-		SITE_ROOT = File.expand_path("../../site", __dir__)
+		SITE_ROOT = File.expand_path("../..", __dir__)
 		PAGES_ROOT = File.expand_path("pages", SITE_ROOT)
 		PUBLIC_ROOT = File.expand_path("public", SITE_ROOT)
 		

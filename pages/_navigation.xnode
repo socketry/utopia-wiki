@@ -1,0 +1,21 @@
+<nav>
+	<?r
+		root = controller[:root]
+		
+		Utopia::Path[attributes[:path]].descend do |path|
+			next unless path.last
+			
+			link = links(path.dirname, :name => path.last, :locale => localization.current_locale, :display => nil).first
+			
+			pp path, link
+			
+			if link
+				content_path = File.join(root, link.path, "content.md")
+				if File.exist?(content_path)
+					?> &rsaquo; <a href="#{link.path}">#{link.title}</a><?r
+				else
+					?> &rsaquo; <span>#{link.title}</span><?r
+				end
+			end
+		end ?>
+</nav>
