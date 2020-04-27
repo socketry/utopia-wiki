@@ -1,11 +1,13 @@
-<content:page>
+<content:page class="show">
 	#{partial 'content:navigation', path: attributes[:full_path]}
 	
-	#{MarkupString.raw Kramdown::Document.new(self[:content], input: 'GFM', syntax_highlighter: nil).to_html}
+	<main>
+		#{MarkupString.raw Kramdown::Document.new(self[:content], input: 'GFM', syntax_highlighter: nil).to_html}
+	</main>
 	
 	<footer>
-		Last Modified: #{File.mtime(self[:page_file]) rescue "N/A"} &mdash;
-		#{controller[:relative_page_file]} 
+		Last Modified: #{File.mtime(self[:page_file]) rescue "N/A"}
+		&mdash; #{controller[:relative_page_file]}
 		<?r if Variant.for(:wiki) != :static ?>
 		&mdash; <a href="edit">Edit Page</a>
 		<?r end ?>
