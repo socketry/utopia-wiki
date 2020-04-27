@@ -1,17 +1,33 @@
 # Utopia::Wiki
 
-A portable, independent, markdown formatted wiki written in Ruby.
+A portable, independent, markdown formatted wiki written in Ruby. It features:
 
-## Documentation
+- [Code Syntax Highlighting](usage/syntax-highlighting/).
+- [Localization](usage/localization/).
+- [Static Site Generation](usage/static-site/).
+- [Database-free Text Files](usage/text-files/).
 
-An editable documentation wiki is accessible by running the following commands:
+## Installation
 
-	bundle install
-	bake utopia:wiki:serve
+Install the gem:
 
-Alternatively you can access a static copy of the site:
+```bash
+$ gem install utopia-wiki
+```
 
-	https://socketry.github.io/utopia-wiki/
+## Usage
+
+[Create a site](create-a-site/):
+
+```bash
+$ utopia-wiki create
+```
+
+[Start a local server](local-server/):
+
+```bash
+$ utopia-wiki serve
+```
 
 ## Contributing
 

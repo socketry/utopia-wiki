@@ -4,4 +4,4 @@ UTOPIA ||= Utopia.setup
 
 require 'utopia/wiki'
 
-Utopia::Wiki.call(self)
+Utopia::Wiki.call(self, locales: ['en', 'ja'])

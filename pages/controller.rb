@@ -3,7 +3,15 @@
 prepend Actions
 
 ROOT = File.expand_path("pages")
-LINKS = Links.new(ROOT)
+LINKS = Utopia::Content::Links.new(ROOT, extension: ".md")
+
+def index_path(locale)
+	if locale
+		"index.#{locale}.md"
+	else
+		"index.md"
+	end
+end
 
 on '**' do |request, path|
 	@full_path = URI_PATH + path
@@ -12,7 +20,10 @@ on '**' do |request, path|
 	@root = ROOT
 	@links = LINKS
 	@page_root = File.join(@root, @page_path)
-	@page_file = File.join(@root, @page_path, "content.md")
+	
+	@localization = Utopia::Localization[request]
+	@relative_page_file = File.join(@page_path, index_path(@localization.current_locale))
+	@page_file = File.join(@root, @relative_page_file)
 	
 	if last_path_component = @page_path.last
 		@title = Trenni::Strings.to_title(last_path_component)
@@ -21,9 +32,18 @@ on '**' do |request, path|
 	end
 end
 
+def exists?(locale: @localization.current_locale)
+	relative_page_file = File.join(@page_path, index_path(locale))
+	page_file = File.join(@root, relative_page_file)
+	
+	if File.exist?(page_file)
+		return page_file
+	end
+end
+
 def read_contents
-	if File.exist? @page_file
-		File.read(@page_file)
+	if path = (exists? || exists?(locale: nil))
+		File.read(path)
 	else
 		"\# #{@title}\n\n" +
 		"This page is empty."
@@ -48,7 +68,10 @@ on '**/edit' do |request, path|
 end
 
 on '**/index' do |request, path|
-	@content = read_contents
-	
-	path.components = ["show"]
+	if exists?
+		@content = read_contents
+		path.components = ["show"]
+	else
+		path.components = ["create"]
+	end
 end

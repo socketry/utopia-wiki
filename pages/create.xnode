@@ -1,0 +1,15 @@
+<content:page>
+	<?r response.status = 404 ?>
+	
+	#{partial 'content:navigation', path: attributes[:full_path]}
+	
+	<h1>#{controller[:title]}</h1>
+	
+	<p>This page does not exist... yet.</p>
+	
+	<footer>
+		Last Modified: #{File.mtime(self[:page_file]) rescue "N/A"} &mdash;
+		#{controller[:relative_page_file]} &mdash;
+		<a href="edit">Edit Page</a>
+	</footer>
+</content:page>

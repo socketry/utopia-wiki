@@ -6,3 +6,5 @@ group :preload do
 	gem "utopia-wiki", path: "../"
 end
 
+gem "utopia", path: "../../utopia"
+gem "rackula", path: "../../rackula"

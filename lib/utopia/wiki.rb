@@ -22,7 +22,10 @@
 
 require "utopia/wiki/version"
 
+require 'variant'
+
 require 'kramdown'
+
 require 'utopia/localization'
 require 'utopia/gallery'
 
@@ -60,7 +63,8 @@ module Utopia
 			if locales
 				builder.use Utopia::Localization,
 					default_locale: locales.first,
-					locales: locales
+					locales: locales,
+					methods: nil
 			end
 			
 			builder.use Utopia::Controller, root: PAGES_ROOT

@@ -32,13 +32,14 @@ html {
 	--main-color: #111;
 	--main-background-color: #fff;
 	
-	--header-color: #1b345b;
+	--header-color: #bed1f0;
 	--underlay-color: #ddd;
 	
 	--accent-color: #1a73e8;
 	--accent-hover-color: #33a3ff;
 	
 	--overlay-color: rgba(255, 255, 255, 0.9);
+	--underlay-color: rgba(0, 0, 0, 0.2);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -53,6 +54,7 @@ html {
 		--accent-hover-color: #80dcff;
 		
 		--overlay-color: rgba(0, 0, 0, 0.8);
+		--underlay-color: rgba(255, 255, 255, 0.9);
 		
 		background-color: black;
 	}
@@ -73,7 +75,7 @@ nav {
 	color: #aaa;
 }
 
-h1, h2, h3, h4, h5, h6, p, ul, dl {
+h1, h2, h3, h4, h5, h6, p, ul, dl, ol {
 	margin: 1rem;
 }
 

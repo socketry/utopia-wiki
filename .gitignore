@@ -12,4 +12,6 @@ Gemfile.lock
 .rspec_status
 
 # Ignore gallery cache:
-/test/public/_gallery
+/wiki/public/_gallery
+/wiki/static
+
