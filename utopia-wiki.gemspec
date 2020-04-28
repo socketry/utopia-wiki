@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
 	
 	spec.require_paths = ["lib"]
 	
-	spec.add_dependency "utopia"
+	spec.add_dependency "utopia", "~> 2.14"
 	spec.add_dependency "utopia-gallery"
 	
 	spec.add_dependency "kramdown"

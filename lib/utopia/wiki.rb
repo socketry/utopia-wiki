@@ -63,8 +63,7 @@ module Utopia
 			if locales
 				builder.use Utopia::Localization,
 					default_locale: locales.first,
-					locales: locales,
-					methods: nil
+					locales: locales
 			end
 			
 			builder.use Utopia::Controller, root: PAGES_ROOT
