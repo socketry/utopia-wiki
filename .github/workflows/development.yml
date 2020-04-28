@@ -43,16 +43,16 @@ jobs:
       with:
         ruby-version: ${{matrix.ruby}}
     
-    - name: Install dependencies
-      run: ${{matrix.env}} bundle install
-    
     - name: Installing packages (ubuntu)
       if: matrix.os == 'ubuntu'
-      run: sudo apt-get install wget
+      run: sudo apt-get install wget pkg-config
     
     - name: Installing packages (macos)
       if: matrix.os == 'macos'
-      run: brew install wget
+      run: brew install wget pkg-config
+    
+    - name: Install dependencies
+      run: ${{matrix.env}} bundle install
     
     - name: Run tests
       timeout-minutes: 5
