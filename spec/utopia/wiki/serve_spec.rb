@@ -20,17 +20,23 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require "bundler/setup"
-require "utopia/wiki"
+require 'utopia/wiki'
+require 'rack/test'
 
-RSpec.configure do |config|
-	# Enable flags like --only-failures and --next-failure
-	config.example_status_persistence_file_path = ".rspec_status"
+RSpec.describe Utopia::Wiki do
+	include Rack::Test::Methods
 	
-	# Disable RSpec exposing methods globally on `Module` and `main`
-	config.disable_monkey_patching!
+	let(:wiki_root) {File.expand_path("../../../wiki", __dir__)}
 	
-	config.expect_with :rspec do |c|
-		c.syntax = :expect
+	let(:rackup_path) {File.expand_path("config.ru", wiki_root)}
+	let(:rackup_directory) {File.dirname(rackup_path)}
+	
+	let(:app) {Rack::Builder.parse_file(rackup_path).first}
+	
+	it "has root page" do
+		get "/index"
+		
+		expect(last_response.body).to include("Wiki")
+		expect(last_response.body).to include("This page does not exist... yet.")
 	end
 end
