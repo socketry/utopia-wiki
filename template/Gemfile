@@ -2,5 +2,5 @@
 source "https://rubygems.org"
 
 group :preload do
-	gem "utopia-wiki", path: "../"
+	gem "utopia-wiki"
 end

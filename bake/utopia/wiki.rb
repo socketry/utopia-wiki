@@ -1,4 +1,13 @@
 
+# Create an empty wiki in the current directory.
+def create
+	template_path = File.expand_path("../../template/*", __dir__)
+	
+	Dir.glob(template_path) do |path|
+		FileUtils::Verbose.cp_r path, Dir.pwd
+	end
+end
+
 # Server the wiki locally.
 def serve
 	system("bundle", "exec", "falcon", "serve")
