@@ -31,10 +31,18 @@ require 'utopia/gallery'
 
 module Utopia
 	module Wiki
+		# The root directory of the web application files.
 		SITE_ROOT = File.expand_path("../..", __dir__)
+		
+		# The root directory for the utopia middleware.
 		PAGES_ROOT = File.expand_path("pages", SITE_ROOT)
+		
+		# The root directory for static assets.
 		PUBLIC_ROOT = File.expand_path("public", SITE_ROOT)
 		
+		# Appends a wiki application to the rack builder.
+		#
+		# @param locales [Array(String)] an array of locales to support, e.g. `['en', 'ja']`.
 		def self.call(builder, root = Dir.pwd, locales: nil)
 			if UTOPIA.production?
 				# Handle exceptions in production with a error page and send an email notification:
