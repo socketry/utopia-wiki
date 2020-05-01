@@ -30,6 +30,14 @@ require 'utopia/localization'
 require 'utopia/gallery'
 
 module Utopia
+	# The Wiki module provides a `Rack` middleware and documentation generation tools. Using these tools allows you to easily and systematically build documentation wikis for Ruby gems and other kinds of projects.
+	#
+	# To create a new wiki, use bake:
+	#
+	#	```bash
+	#	$ bake utopia:wiki:create
+	#	```
+	#
 	module Wiki
 		# The root directory of the web application files.
 		SITE_ROOT = File.expand_path("../..", __dir__)

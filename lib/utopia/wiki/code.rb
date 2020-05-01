@@ -61,13 +61,11 @@ module Utopia
 				
 				@index.trie.each do |path, node|
 					if symbols = node.values
-						symbols.each do |symbol|
-							if symbol.container?
-								scopes[path] ||= symbol.key
-								
-								$stderr.puts "Generating page for #{symbol.qualified_name}"
-								generate_page(symbol, node)
-							end
+						symbol = best(symbols)
+						
+						if symbol.container?
+							$stderr.puts "Generating page for #{symbol.qualified_name}"
+							generate_page(symbol, node)
 						end
 					end
 					
@@ -77,12 +75,30 @@ module Utopia
 			
 			protected
 			
+			def best(symbols)
+				symbols.each do |symbol|
+					if symbol.documentation
+						return symbol
+					end
+				end
+				
+				return symbols.first
+			end
+			
+			# The path for the index markdown file.
 			INDEX = "index.md"
 			
+			# Generate a file-system path to the given page.
 			def path_for(page = nil)
 				File.join(@root, @relative_path, *page, INDEX)
 			end
 			
+			# Compute an HTML id for the given symbol.
+			def id_for(symbol)
+				symbol.qualified_name.gsub(/[^\w]/, '')
+			end
+			
+			# Compute an HTML link to the given symbol.
 			def link_for(symbol)
 				path = symbol.lexical_path.map{|entry| entry.to_s.downcase}
 				
@@ -94,26 +110,24 @@ module Utopia
 				end
 			end
 			
-			def id_for(symbol)
-				symbol.qualified_name.gsub(/[^\w]/, '')
-			end
-			
+			# Generate the documentation index file.
 			def generate_index
 				File.open(path_for, "w") do |io|
-					io.puts "# Symbols"
+					io.puts "# Index"
 					io.puts
 					
 					io.puts
 					@index.symbols.each do |name, symbol|
-						io.puts "- [#{symbol.qualified_name}](#{link_for(symbol)}/)"
+						io.puts "- [#{symbol.qualified_name}](#{link_for(symbol)})"
 					end
 				end
 			end
 			
+			# Generate the documentation for a specific symbol.
 			def generate_definition(io, path, symbol)
 				if documentation = symbol.documentation
 					io.puts
-					io.puts "\#\# `#{symbol.long_form}`{:.language-ruby} {\##{id_for(symbol)}}"
+					io.puts "\#\#\# `#{symbol.long_form}`{:.language-ruby} {\##{id_for(symbol)}}"
 					io.puts
 					
 					documentation.description do |line|
@@ -133,6 +147,7 @@ module Utopia
 				end
 			end
 			
+			# Generate a page for a specific symbol and all it's children.
 			def generate_page(symbol, node)
 				path = path_for(
 					symbol.lexical_path.map{|entry| entry.to_s.downcase}
@@ -141,20 +156,33 @@ module Utopia
 				FileUtils.mkpath(File.dirname(path))
 				
 				File.open(path, "w") do |io|
-					io.puts "\# `#{symbol.qualified_name}`"
+					io.puts "\# `#{symbol.qualified_name}`{:.language-ruby}"
 					
-					if node.children.any?
+					if documentation = symbol.documentation
 						io.puts
-						node.children.each do |name, child|
-							if symbol = child.values.find{|symbol| symbol.container?}
-								io.puts "- [#{symbol.qualified_name}](#{symbol.name.downcase}/)"
-							end
+						documentation.description do |line|
+							io.puts line
 						end
 					end
 					
+					nested = node.children.map{|name, child| best(child.values)}.select{|symbol| symbol.container?}
+					
+					if nested.any?
+						io.puts
+						io.puts "\#\# Nested"
+						nested.each do |symbol|
+							io.puts "- [#{symbol.qualified_name}](#{link_for(symbol)})"
+						end
+					end
+					
+					io.puts
+					io.puts "\#\# Symbols"
+					
 					node.children.each do |name, child|
 						child.values.each do |symbol|
-							generate_definition(io, path, symbol)
+							unless symbol.container?
+								generate_definition(io, path, symbol)
+							end
 						end
 					end
 				end

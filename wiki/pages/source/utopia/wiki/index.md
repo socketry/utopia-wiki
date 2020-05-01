@@ -1,21 +1,31 @@
-# `::Utopia::Wiki`
+# `::Utopia::Wiki`{:.language-ruby}
+
+The Wiki module provides a `Rack` middleware and documentation generation tools. Using these tools allows you to easily and systematically build documentation wikis for Ruby gems and other kinds of projects.
+
+To create a new wiki, use bake:
+
+```bash
+$ bake utopia:wiki:create
+```
 
 ## Nested
-- [::Utopia::Wiki::Code](code/)
+- [::Utopia::Wiki::Code](/source/utopia/wiki/code/index)
 
-## `SITE_ROOT = File.expand_path("../..", __dir__)`{:.language-ruby}
+## Symbols
+
+### `SITE_ROOT = File.expand_path("../..", __dir__)`{:.language-ruby} {#UtopiaWikiSITE_ROOT}
 
 The root directory of the web application files.
 
-## `PAGES_ROOT = File.expand_path("pages", SITE_ROOT)`{:.language-ruby}
+### `PAGES_ROOT = File.expand_path("pages", SITE_ROOT)`{:.language-ruby} {#UtopiaWikiPAGES_ROOT}
 
 The root directory for the utopia middleware.
 
-## `PUBLIC_ROOT = File.expand_path("public", SITE_ROOT)`{:.language-ruby}
+### `PUBLIC_ROOT = File.expand_path("public", SITE_ROOT)`{:.language-ruby} {#UtopiaWikiPUBLIC_ROOT}
 
 The root directory for static assets.
 
-## `def self.call(builder, root = Dir.pwd, locales: nil)`{:.language-ruby}
+### `def self.call(builder, root = Dir.pwd, locales: nil)`{:.language-ruby} {#UtopiaWikicall}
 
 Appends a wiki application to the rack builder.
 
@@ -23,6 +33,6 @@ Appends a wiki application to the rack builder.
 : an array of locales to support, e.g. `['en', 'ja']`.
 
 
-## `class Code`{:.language-ruby}
+### `VERSION = "0.3.0"`{:.language-ruby} {#UtopiaWikiVERSION}
 
-Generates wiki pages from source code, including cross-referenced links and formatted comments.
+The current version of the gem.
