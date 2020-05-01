@@ -62,7 +62,7 @@ module Utopia
 				@index.trie.each do |path, node|
 					if symbols = node.values
 						symbols.each do |symbol|
-							if [:module, :class].include?(symbol.kind)
+							if symbol.container?
 								scopes[path] ||= symbol.key
 								
 								$stderr.puts "Generating page for #{symbol.qualified_name}"
@@ -86,7 +86,16 @@ module Utopia
 			def link_for(symbol)
 				path = symbol.lexical_path.map{|entry| entry.to_s.downcase}
 				
-				return Trenni::Reference.new(@path + path + "index", fragment: symbol.qualified_name)
+				if symbol.container?
+					return Trenni::Reference.new(@path + path + "index")
+				else
+					name = path.pop
+					return Trenni::Reference.new(@path + path + "index", fragment: id_for(symbol))
+				end
+			end
+			
+			def id_for(symbol)
+				symbol.qualified_name.gsub(/[^\w]/, '')
 			end
 			
 			def generate_index
@@ -94,8 +103,9 @@ module Utopia
 					io.puts "# Symbols"
 					io.puts
 					
+					io.puts
 					@index.symbols.each do |name, symbol|
-						io.puts "- [`#{symbol.qualified_name}`](#{link_for(symbol)})"
+						io.puts "- [#{symbol.qualified_name}](#{link_for(symbol)}/)"
 					end
 				end
 			end
@@ -103,7 +113,7 @@ module Utopia
 			def generate_definition(io, path, symbol)
 				if documentation = symbol.documentation
 					io.puts
-					io.puts "\#\# `#{symbol.long_form}`{:.language-ruby}"
+					io.puts "\#\# `#{symbol.long_form}`{:.language-ruby} {\##{id_for(symbol)}}"
 					io.puts
 					
 					documentation.description do |line|
@@ -135,9 +145,8 @@ module Utopia
 					
 					if node.children.any?
 						io.puts
-						io.puts "\#\# Nested"
 						node.children.each do |name, child|
-							if symbol = child.values.find{|symbol| symbol.kind == :class || symbol.kind == :module}
+							if symbol = child.values.find{|symbol| symbol.container?}
 								io.puts "- [#{symbol.qualified_name}](#{symbol.name.downcase}/)"
 							end
 						end
