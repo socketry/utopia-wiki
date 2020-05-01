@@ -1,3 +1,4 @@
 # `::Utopia`
 
-- [Wiki](wiki/)
+## Nested
+- [::Utopia::Wiki](wiki/)
