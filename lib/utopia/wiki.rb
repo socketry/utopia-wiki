@@ -30,6 +30,8 @@ require 'utopia/localization'
 require 'utopia/gallery'
 
 module Utopia
+	# A markdown-based wiki web application.
+	#
 	# The Wiki module provides a `Rack` middleware and documentation generation tools. Using these tools allows you to easily and systematically build documentation wikis for Ruby gems and other kinds of projects.
 	#
 	# To create a new wiki, use bake:
@@ -37,7 +39,8 @@ module Utopia
 	#	```bash
 	#	$ bake utopia:wiki:create
 	#	```
-	#
+	#	
+	# See {Code:root} for the code generation part.
 	module Wiki
 		# The root directory of the web application files.
 		SITE_ROOT = File.expand_path("../..", __dir__)
@@ -49,6 +52,16 @@ module Utopia
 		PUBLIC_ROOT = File.expand_path("public", SITE_ROOT)
 		
 		# Appends a wiki application to the rack builder.
+		#
+		#	~~~ ruby
+		#	# In your `config.ru` file:
+		#	
+		#	require 'utopia/setup'
+		#	UTOPIA ||= Utopia.setup
+		#
+		#	require 'utopia/wiki'
+		#	Utopia::Wiki.call(self)
+		#	~~~
 		#
 		# @param locales [Array(String)] an array of locales to support, e.g. `['en', 'ja']`.
 		def self.call(builder, root = Dir.pwd, locales: nil)

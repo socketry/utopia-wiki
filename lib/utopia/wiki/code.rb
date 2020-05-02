@@ -28,6 +28,7 @@ module Utopia
 	module Wiki
 		# Generates wiki pages from source code, including cross-referenced links and formatted comments.
 		class Code
+			# A code instance with canonical defaults for a wiki in the current directory.
 			def self.wiki
 				root = File.expand_path("wiki/pages")
 				relative_path = ["source"]
@@ -46,6 +47,15 @@ module Utopia
 				
 				@index = Decode::Index.new
 			end
+			
+			# The file-system path to the root of the wiki.
+			attr :root
+			
+			# The relative path where the generated files should be placed.
+			attr :relative_path
+			
+			# The source code index which is used for generating pages.
+			attr :index
 			
 			# Update the index by loading and parsing the specified paths.
 			# @param paths [Array(String)] The paths to load and parse.
@@ -75,6 +85,8 @@ module Utopia
 			
 			protected
 			
+			WARNING = ['', "<!-- This page is automatically generated. Regenerating this page will overwrite any changes! -->", '']
+			
 			def best(symbols)
 				symbols.each do |symbol|
 					if symbol.documentation
@@ -83,6 +95,20 @@ module Utopia
 				end
 				
 				return symbols.first
+			end
+			
+			def linkify(text, symbol)
+				return text unless symbol
+				
+				text&.gsub(/{(.*?)}/) do |match|
+					reference = symbol.language.reference($1)
+					
+					if symbol = @index.lookup(reference, relative_to: symbol)&.first
+						"[`#{symbol.short_form}`{:.language-ruby}](#{link_for(symbol)})"
+					else
+						"`#{$1}`"
+					end
+				end
 			end
 			
 			# The path for the index markdown file.
@@ -112,13 +138,30 @@ module Utopia
 			
 			# Generate the documentation index file.
 			def generate_index
-				File.open(path_for, "w") do |io|
+				index_path = path_for # nothing
+				
+				FileUtils.mkpath(File.dirname(index_path))
+				
+				File.open(index_path, "w") do |io|
 					io.puts "# Index"
-					io.puts
+					io.puts WARNING
 					
-					io.puts
-					@index.symbols.each do |name, symbol|
-						io.puts "- [#{symbol.qualified_name}](#{link_for(symbol)})"
+					@index.trie.each do |path, node|
+						if symbols = node.values
+							symbol = best(symbols)
+							
+							indentation = "\t" * (path.size - 1)
+							
+							if documentation = symbol.documentation
+								io.puts "#{indentation}- [`#{symbol.long_form}`{:.language-ruby}](#{link_for(symbol)})"
+								io.puts "#{indentation}  #{linkify(documentation.description.first, symbol)}"
+							elsif symbol.container?
+								io.puts "#{indentation}- `#{symbol.long_form}`{:.language-ruby}"
+							else
+								# Don't descend any further:
+								throw :skip
+							end
+						end
 					end
 				end
 			end
@@ -131,16 +174,18 @@ module Utopia
 					io.puts
 					
 					documentation.description do |line|
-						io.puts line
+						io.puts linkify(line, symbol)
 					end
 					
 					parameters = documentation.parameters.to_a
 					
 					if parameters.any?
 						io.puts
+						io.puts "\#\#\#\# Parameters"
+						io.puts
 						parameters.each do |parameter|
-							io.puts "`#{parameter[:name]}`"
-							io.puts ": #{parameter[:details]}"
+							io.puts "`#{parameter[:name]}` `#{parameter[:type]}`{:.language-ruby}"
+							io.puts ": #{linkify(parameter[:details], symbol)}"
 							io.puts
 						end
 					end
@@ -157,11 +202,12 @@ module Utopia
 				
 				File.open(path, "w") do |io|
 					io.puts "\# `#{symbol.qualified_name}`{:.language-ruby}"
+					io.puts WARNING
 					
 					if documentation = symbol.documentation
 						io.puts
 						documentation.description do |line|
-							io.puts line
+							io.puts linkify(line, symbol)
 						end
 					end
 					
@@ -175,14 +221,23 @@ module Utopia
 						end
 					end
 					
-					io.puts
-					io.puts "\#\# Symbols"
-					
-					node.children.each do |name, child|
-						child.values.each do |symbol|
-							unless symbol.container?
-								generate_definition(io, path, symbol)
+					generate_definitions(io, path, node)
+				end
+			end
+			
+			def generate_definitions(io, path, node)
+				printed = false
+				
+				node.children.each do |name, child|
+					child.values.each do |symbol|
+						if symbol.documentation and !symbol.container?
+							unless printed
+								io.puts
+								io.puts "\#\# Definitions"
+								printed = true
 							end
+							
+							generate_definition(io, path, symbol)
 						end
 					end
 				end

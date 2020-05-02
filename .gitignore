@@ -1,18 +1,20 @@
-/.bundle/
-/.yardoc
-/_yardoc/
-/coverage/
-/doc/
-/pkg/
-/spec/reports/
-/tmp/
-Gemfile.lock
-.sass-cache
+# Development specific:
+/.rspec_status
+/.bundle
+/pkg
+/gems.locked
 
-# rspec failure tracking:
-.rspec_status
+# Temporary data should not be added to the repository:
+/tmp
 
-# Ignore gallery cache:
+# Node modules are 3rd party dependencies which can be fetched easily:
+/node_modules
+
+# This file should only ever exist on production, and may contain sensitive information:
+/config/environment.yaml
+
+# Ignore resized gallery photos:
+/public/_gallery
+
 /wiki/public/_gallery
 /wiki/static
-
