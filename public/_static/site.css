@@ -88,11 +88,15 @@ nav {
 }
 
 li {
-	margin: 0.2rem;
+	margin: 0.8rem;
 }
 
 ul {
+	padding: 0;
+	padding-left: 0.5rem;
+	margin: 0.5rem;
 	margin-bottom: 1rem;
+	list-style-type: "› ";
 }
 
 li > ul, li > ol {

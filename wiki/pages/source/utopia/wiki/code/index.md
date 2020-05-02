@@ -1,25 +1,48 @@
 # `::Utopia::Wiki::Code`{:.language-ruby}
 
+<!-- This page is automatically generated. Regenerating this page will overwrite any changes! -->
+
+
 Generates wiki pages from source code, including cross-referenced links and formatted comments.
 
-## Symbols
+## Definitions
+
+### `def self.wiki`{:.language-ruby} {#UtopiaWikiCodewiki}
+
+A code instance with canonical defaults for a wiki in the current directory.
 
 ### `def initialize(root, relative_path)`{:.language-ruby} {#UtopiaWikiCodeinitialize}
 
 Initialize the generator with the given root path to the wiki and the relative path to use within the wiki.
 
-`root`
+#### Parameters
+
+`root` `String`{:.language-ruby}
 : The file-system path to the root of the wiki.
 
-`relative_path`
+`relative_path` `Utopia::Path`{:.language-ruby}
 : The relative path where the generated files should be placed.
 
+
+### `attr :root`{:.language-ruby} {#UtopiaWikiCoderoot}
+
+The file-system path to the root of the wiki.
+
+### `attr :relative_path`{:.language-ruby} {#UtopiaWikiCoderelative_path}
+
+The relative path where the generated files should be placed.
+
+### `attr :index`{:.language-ruby} {#UtopiaWikiCodeindex}
+
+The source code index which is used for generating pages.
 
 ### `def update(paths)`{:.language-ruby} {#UtopiaWikiCodeupdate}
 
 Update the index by loading and parsing the specified paths.
 
-`paths`
+#### Parameters
+
+`paths` `Array(String)`{:.language-ruby}
 : The paths to load and parse.
 
 
