@@ -1,57 +1,44 @@
-# Utopia::Wiki
+# Index Extraction Example
 
-A portable, independent, markdown formatted wiki written in Ruby.
+This example demonstrates how to extract symbols using the index. An instance of {Decode::Index} is used for loading symbols from source code files. These symbols are available as a flat list and as a trie structure. You can look up specific symbols using a reference using {Decode::Index:lookup}.
 
-## Installation
+~~~ruby
+require_relative '../../lib/decode/index'
+~~~
 
-Install the gem:
+Firstly, construct the index:
 
-```bash
-$ gem install utopia-wiki
-```
+~~~ruby
+index = Decode::Index.new
+~~~
 
-## Usage
+Then, update the index by loading paths from the file system:
 
-[Create a site](create-a-site/):
+~~~ruby
+paths = Dir.glob(File.expand_path("../../lib/**/*.rb", __dir__))
+index.update(paths)
+~~~
 
-```bash
-$ utopia-wiki create
-```
+Finally, you can print out the loaded symbols:
 
-[Start a local server](local-server/):
+~~~ruby
+index.symbols.each do |name, symbol|
+	puts symbol.long_form
+end
+~~~
 
-```bash
-$ utopia-wiki serve
-```
+Lookup a specific symbol:
 
-## Contributing
+~~~ruby
+absolute_reference = Decode::Language::Ruby.reference("Decode::Index:lookup")
+lookup_symbol = index.lookup(absolute_reference).first
+puts lookup_symbol.long_form
+~~~
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+Lookup a method relative to that symbol:
 
-## License
-
-Released under the MIT license.
-
-Copyright, 2020, by [Samuel G. D. Williams](http://www.codeotaku.com).
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+~~~ruby
+relative_reference = Decode::Language::Ruby.reference("trie")
+trie_attribute = index.lookup(relative_reference, relative_to: lookup_symbol).first
+puts trie_attribute.long_form
+~~~
