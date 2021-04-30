@@ -2,7 +2,6 @@ PATH
   remote: ..
   specs:
     utopia-wiki (0.3.0)
-      decode
       falcon
       kramdown
       kramdown-parser-gfm
@@ -13,7 +12,6 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    ast (2.4.0)
     async (1.25.2)
       console (~> 1.0)
       nio4r (~> 2.3)
@@ -38,8 +36,6 @@ GEM
     build-environment (1.13.0)
     concurrent-ruby (1.1.6)
     console (1.8.2)
-    decode (0.5.0)
-      parser
     falcon (0.36.4)
       async (~> 1.13)
       async-container (~> 0.16.0)
@@ -67,8 +63,6 @@ GEM
     mini_mime (1.0.2)
     msgpack (1.3.3)
     nio4r (2.5.2)
-    parser (2.7.1.2)
-      ast (~> 2.4.0)
     process-group (1.2.1)
       process-terminal (~> 0.2.0)
     process-metrics (0.2.1)
@@ -91,7 +85,7 @@ GEM
     rake (13.0.1)
     rake-compiler (1.1.0)
       rake
-    rexml (3.2.4)
+    rexml (3.2.5)
     samovar (2.1.4)
       console (~> 1.0)
       mapping (~> 1.0)
