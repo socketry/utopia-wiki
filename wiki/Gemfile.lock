@@ -2,7 +2,6 @@ PATH
   remote: ..
   specs:
     utopia-wiki (0.3.0)
-      decode
       falcon
       kramdown
       kramdown-parser-gfm
@@ -13,7 +12,6 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    ast (2.4.0)
     async (1.25.2)
       console (~> 1.0)
       nio4r (~> 2.3)
@@ -38,15 +36,14 @@ GEM
     build-environment (1.13.0)
     concurrent-ruby (1.1.6)
     console (1.8.2)
-    decode (0.5.0)
-      parser
-    falcon (0.36.4)
+    falcon (0.36.6)
       async (~> 1.13)
       async-container (~> 0.16.0)
       async-http (~> 0.52.0)
       async-http-cache (~> 0.2.0)
       async-io (~> 1.22)
       build-environment (~> 1.13)
+      bundler
       localhost (~> 1.1)
       process-metrics (~> 0.2.0)
       rack (>= 1.0)
@@ -66,9 +63,11 @@ GEM
     mime-types-data (3.2020.0425)
     mini_mime (1.0.2)
     msgpack (1.3.3)
+    net-protocol (0.2.1)
+      timeout
+    net-smtp (0.3.3)
+      net-protocol
     nio4r (2.5.2)
-    parser (2.7.1.2)
-      ast (~> 2.4.0)
     process-group (1.2.1)
       process-terminal (~> 0.2.0)
     process-metrics (0.2.1)
@@ -83,7 +82,7 @@ GEM
     protocol-http2 (0.14.0)
       protocol-hpack (~> 1.4)
       protocol-http (~> 0.18)
-    rack (2.2.2)
+    rack (3.0.4.1)
     rackula (1.1.0)
       falcon (~> 0.34)
       samovar (~> 2.1)
@@ -96,18 +95,22 @@ GEM
       console (~> 1.0)
       mapping (~> 1.0)
     thread-local (1.0.0)
+    timeout (0.3.1)
     timers (4.3.0)
+    traces (0.8.0)
     trenni (3.9.0)
       rake-compiler
-    utopia (2.15.0)
+    utopia (2.21.0)
       concurrent-ruby (~> 1.0)
       console (~> 1.0)
       http-accept (~> 2.1)
       mail (~> 2.6)
       mime-types (~> 3.0)
       msgpack
-      rack (~> 2.2)
+      net-smtp
+      rack (~> 3.0)
       samovar (~> 2.1)
+      traces
       trenni (~> 3.0)
       variant (~> 0.1)
     utopia-gallery (2.5.0)
